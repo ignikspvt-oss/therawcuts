@@ -75,6 +75,11 @@ router.post("/login", loginLimiter, validate(loginSchema), async (req, res) => {
   }
 });
 
+// GET /api/auth/verify — Validate the current access token
+router.get("/verify", require("../middleware/auth"), (req, res) => {
+  res.json({ valid: true });
+});
+
 // POST /api/auth/refresh — Exchange refresh token for new access token
 router.post("/refresh", refreshLimiter, validate(refreshSchema), async (req, res) => {
   try {
