@@ -119,12 +119,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-// Start server
-const start = async () => {
-  await connectDB();
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} (${isProd ? "production" : "development"})`);
-  });
-};
+// Connect to DB (mongoose caches the connection across serverless invocations)
+connectDB();
 
-start();
+// For local development, start the HTTP server
+if (!isProd) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} (development)`);
+  });
+}
+
+module.exports = app;
