@@ -12,7 +12,7 @@ const {
   getSessionIdentifier: (req) => req.ip + (req.headers["user-agent"] || ""),
   cookieName: isProd ? "__Host-csrf" : "csrf-token",
   cookieOptions: {
-    sameSite: "lax",
+    sameSite: isProd ? "none" : "lax",
     secure: isProd,
     httpOnly: true,
     path: "/",

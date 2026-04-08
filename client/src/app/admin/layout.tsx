@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { verifyToken } from "@/lib/api";
 import {
   HiOutlineHome,
   HiOutlineCalendarDays,
@@ -30,12 +31,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    const token = localStorage.getItem("admin_token");
-    if (!token && !isLoginPage) {
-      router.replace("/admin/login");
-    } else {
+    if (isLoginPage) {
       setAuthenticated(true);
+      return;
     }
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      router.replace("/admin/login");
+      return;
+    }
+    // Validate token with server — stale/expired tokens are rejected here
+    verifyToken()
+      .then(() => setAuthenticated(true))
+      .catch(() => {
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin_refresh_token");
+        router.replace("/admin/login");
+      });
   }, [isLoginPage, router]);
 
   const handleLogout = () => {

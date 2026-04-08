@@ -185,6 +185,8 @@ export const verifyPayment = (data: {
 export const adminLogin = (email: string, password: string) =>
   api.post("/auth/login", { email, password });
 
+export const verifyToken = () => api.get("/auth/verify");
+
 export const getDashboardStats = () => api.get("/dashboard/stats");
 
 export const getBookings = (page = 1, limit = 20, country?: string) =>
