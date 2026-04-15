@@ -59,7 +59,7 @@ function BookingFormContent() {
   const router = useRouter();
   const { country, prices, formatPrice } = useLocation();
 
-  const collectionSlug = searchParams.get("collection") || "social-cuts";
+  const collectionSlug = searchParams.get("collection") || "";
   const meta = COLLECTION_META[collectionSlug] || COLLECTION_META["social-cuts"];
 
   const [form, setForm] = useState({
@@ -120,6 +120,7 @@ function BookingFormContent() {
     if (!form.email.trim()) errs.email = "Email is required";
     else if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) errs.email = "Enter a valid email";
     if (!form.eventDetails.trim()) errs.eventDetails = "Please tell us about your shoot";
+    if (!form.collection) errs.collection = "Please select a collection";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -290,14 +291,18 @@ function BookingFormContent() {
           <h1 className="headline text-white" style={{ fontSize: "clamp(2.2rem,6vw,3.5rem)" }}>
             Book Your Shoot
           </h1>
-          <p className="mt-3 text-white/70 text-base">
-            You&apos;ve selected:{" "}
-            <span className="text-white font-semibold">{currentMeta.name}</span>
-            {" — "}
-            <span className="text-white/90">
-              {formatPrice(currentPrice)} per {form.collection === "social-cuts" ? "cut" : "reel"}
-            </span>
-          </p>
+          {form.collection ? (
+            <p className="mt-3 text-white/70 text-base">
+              You&apos;ve selected:{" "}
+              <span className="text-white font-semibold">{currentMeta.name}</span>
+              {" — "}
+              <span className="text-white/90">
+                {formatPrice(currentPrice)} per {form.collection === "social-cuts" ? "cut" : "reel"}
+              </span>
+            </p>
+          ) : (
+            <p className="mt-3 text-white/60 text-base">Select a collection below to get started.</p>
+          )}
 
           {/* Canada notice */}
           {isCanada && (
@@ -431,7 +436,7 @@ function BookingFormContent() {
           {/* Selected Collection */}
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: "#600000" }}>
-              Selected Collection
+              Selected Collection <span style={{ color: "var(--crimson)" }}>*</span>
             </label>
             <select
               value={form.collection}
@@ -440,15 +445,21 @@ function BookingFormContent() {
               style={{
                 background: "#fff",
                 border: "1.5px solid rgba(96,0,0,0.15)",
-                color: "#600000",
+                color: form.collection ? "#600000" : "rgba(96,0,0,0.45)",
               }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "var(--crimson)")}
               onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(96,0,0,0.15)")}
             >
+              <option value="" disabled style={{ color: "rgba(96,0,0,0.4)" }}>
+                Please select a collection
+              </option>
               {collectionOptions.map(({ slug, label }) => (
                 <option key={slug} value={slug}>{label}</option>
               ))}
             </select>
+            {errors.collection && (
+              <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.collection}</p>
+            )}
           </div>
 
           {/* Quantity stepper */}

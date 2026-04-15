@@ -145,69 +145,78 @@ export default function Hero() {
       </span>
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-24 pb-40">
-        {/* ── Hello Main Character — single line, centered ── */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20 sm:pt-24 pb-24 sm:pb-40">
+        {/* ── HELLO label — centered, letter-spacing tightened on mobile ── */}
         <div
           ref={tagRef}
           id="hero-hello-main"
-          className="text-center mb-6"
+          className="text-center mb-4 sm:mb-6"
           style={{ opacity: 0 }}
         >
           <p style={{
-            fontSize: "clamp(1rem,2vw,1.35rem)", fontWeight: 500,
-            letterSpacing: "0.25em", color: "rgba(255,255,255,0.65)",
+            fontSize: "clamp(0.65rem, 1.4vw, 1rem)",
+            fontWeight: 600,
+            letterSpacing: "clamp(0.1em, 0.5vw, 0.32em)",
+            color: "rgba(255,255,255,0.55)",
+            fontFamily: "var(--font-brand), Arial, sans-serif",
+            textTransform: "uppercase",
           }}>
-            Hello Main Character
+            HELLO MAIN CHARACTER ENERGY
           </p>
         </div>
 
-        {/* Main headline — centered */}
+        {/* Main headline — brand font, single-line, fits all screens */}
         <div
           ref={line1Ref}
-          className="headline text-white text-center"
+          className="text-white text-center brand-logo"
           style={{
-            fontSize: "clamp(2rem,5.5vw,5.5rem)",
-            clipPath: "inset(0 100% 0 0)",
+            // 77rem = max-w-7xl (80rem) − px-6 both sides (3rem) — cap prevents overflow on wide screens
+            fontSize: "min(calc((100vw - 3rem) / 20), 3.85rem)",
             whiteSpace: "nowrap",
+            clipPath: "inset(0 100% 0 0)",
+            textTransform: "uppercase",
           }}
         >
-          This Is Your Moment.
+          #MainCharacterEnergy
         </div>
 
-        {/* Hashtag tagline */}
+        {/* Tagline */}
         <p
           ref={taglineRef}
           className="text-center opacity-0"
           style={{
-            fontSize: "clamp(0.8rem,1.4vw,1rem)", letterSpacing: "0.2em",
-            color: "rgba(255,255,255,0.4)", marginTop: "0.75rem",
+            fontSize: "clamp(0.7rem, 1.4vw, 1rem)",
+            letterSpacing: "clamp(0.08em, 0.5vw, 0.2em)",
+            color: "rgba(255,255,255,0.4)",
+            marginTop: "0.5rem",
+            fontFamily: "var(--font-brand), Arial, sans-serif",
           }}
         >
           #MainCharacterEnergy
         </p>
 
-        {/* Crimson ruler (white on crimson) */}
+        {/* Crimson ruler — centered on mobile, left on desktop */}
         <div
           ref={rulerRef}
-          className="mt-8 mb-8 h-[1px] w-24 origin-left"
+          className="mt-6 sm:mt-8 mb-6 sm:mb-8 h-[1px] w-16 sm:w-24 mx-auto sm:mx-0 origin-left"
           style={{ backgroundColor: "rgba(255,255,255,0.3)" }}
         />
 
         {/* Sub-copy */}
         <p
           ref={subRef}
-          className="text-lg sm:text-xl max-w-xl leading-relaxed opacity-0"
+          className="text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed opacity-0"
           style={{ color: "rgba(255,255,255,0.65)" }}
         >
-          We shoot, edit, and deliver your reel — in under 24&nbsp;hours.
+          This is Your Moment. We shoot, edit, and deliver your reel — in under 24&nbsp;hours.
           No fluff. No filler. Just you, in your element.
         </p>
 
-        {/* CTAs */}
-        <div ref={ctaRef} className="mt-10 flex flex-col sm:flex-row items-start gap-4">
+        {/* CTAs — full-width stacked on mobile, inline on sm+ */}
+        <div ref={ctaRef} className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4">
           <Link
             href="/book"
-            className="px-8 py-4 rounded-full font-semibold transition-all duration-200 hover:scale-[1.03]"
+            className="px-8 py-4 rounded-full font-semibold text-center transition-all duration-200 hover:scale-[1.03] active:scale-[0.97]"
             style={{ backgroundColor: "#fff", color: "var(--crimson)" }}
           >
             Book Your Shoot →
@@ -215,7 +224,7 @@ export default function Hero() {
           <a
             href="#portfolio"
             onClick={scrollToPortfolio}
-            className="px-8 py-4 rounded-full font-medium transition-all duration-200"
+            className="px-8 py-4 rounded-full font-medium text-center transition-all duration-200 active:scale-[0.97]"
             style={{ border: "1.5px solid rgba(255,255,255,0.35)", color: "rgba(255,255,255,0.85)" }}
             onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.7)")}
             onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.35)")}
@@ -224,15 +233,15 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Stats */}
+        {/* Stats — tighter gap + smaller top margin on mobile */}
         <div
           ref={statsRef}
-          className="mt-20 flex items-center gap-10 sm:gap-16"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: "2rem" }}
+          className="mt-12 sm:mt-20 flex flex-wrap items-center gap-6 sm:gap-10 lg:gap-16"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: "1.25rem" }}
         >
           {stats.map((s) => (
             <div key={s.value} className="opacity-0">
-              <p className="headline text-white" style={{ fontSize: "clamp(1.6rem,4vw,2.4rem)" }}>
+              <p className="headline text-white" style={{ fontSize: "clamp(1.3rem, 4vw, 2.4rem)" }}>
                 {s.value}
               </p>
               <p className="section-label mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>

@@ -10,13 +10,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Collections() {
   const sectionRef = useRef<HTMLElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { prices, formatPrice } = useLocation();
 
   const collections = [
     {
       name: "Social Cuts",
       tag: "Shot on iPhone",
+      tagline: "Fast. Real. Made for the scroll.",
+      description: "Social Cuts are shot on iPhone — perfect for authentic, everyday content that performs on Instagram and beyond.",
       bestFor: "Instagram reels, quick content, personal creators",
       deliverable: "Min 3-hour shoot session",
       pricing: `${formatPrice(prices["social-cuts"])} per cut`,
@@ -24,7 +25,9 @@ export default function Collections() {
     },
     {
       name: "Signature Cuts",
-      tag: "Professional Camera",
+      tag: "Shot on Camera",
+      tagline: "Premium. Polished. Built to impress.",
+      description: "Signature Cuts are shot on a professional camera — cinematic quality for brands, founders, and premium content.",
       bestFor: "Brands, founders, premium content",
       deliverable: "Min 2 reels required",
       pricing: `${formatPrice(prices["signature-cuts"])} per reel`,
@@ -45,23 +48,17 @@ export default function Collections() {
         }
       );
 
-      // Horizontal scroll on desktop
-      const container = scrollContainerRef.current;
-      if (!container || window.innerWidth < 1024) return;
-      const track = container.querySelector(".cards-track") as HTMLElement;
-      if (!track) return;
-
-      gsap.to(track, {
-        x: () => -(track.scrollWidth - window.innerWidth + 200),
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 8%",
-          end: () => `+=${track.scrollWidth}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-        },
+      // Simple fade-up for each card — no horizontal scroll
+      gsap.utils.toArray<HTMLElement>(".collection-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 48 },
+          {
+            opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
+            delay: i * 0.12,
+            scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+          }
+        );
       });
     }, sectionRef);
 
@@ -89,7 +86,7 @@ export default function Collections() {
   };
 
   return (
-    <section ref={sectionRef} id="collections" className="py-28 px-6 bg-white overflow-hidden">
+    <section ref={sectionRef} id="collections" className="py-28 px-6 bg-white">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-14 collections-title opacity-0">
         <p className="section-label mb-3" style={{ color: "var(--crimson)" }}>
@@ -105,26 +102,48 @@ export default function Collections() {
         <p className="mt-4 text-lg max-w-xl" style={{ color: "rgba(8,8,8,0.52)" }}>
           Our collections are designed around what you need — not the clock.
         </p>
+
+        {/* What's the difference */}
+        <div className="mt-8 flex flex-col sm:flex-row gap-4">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
+            style={{ background: "rgba(96,0,0,0.05)", border: "1px solid rgba(96,0,0,0.10)" }}>
+            <span className="text-xl">📱</span>
+            <div>
+              <p className="text-sm font-semibold" style={{ color: "var(--crimson)" }}>Social Cuts</p>
+              <p className="text-xs" style={{ color: "rgba(8,8,8,0.5)" }}>Shot on iPhone</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
+            style={{ background: "rgba(96,0,0,0.05)", border: "1px solid rgba(96,0,0,0.10)" }}>
+            <span className="text-xl">🎥</span>
+            <div>
+              <p className="text-sm font-semibold" style={{ color: "var(--crimson)" }}>Signature Cuts</p>
+              <p className="text-xs" style={{ color: "rgba(8,8,8,0.5)" }}>Shot on Professional Camera</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div ref={scrollContainerRef}>
-        <div className="cards-track flex gap-5 lg:gap-6 lg:flex-nowrap lg:pl-[8vw] overflow-x-auto lg:overflow-visible snap-x snap-mandatory lg:snap-none scroll-pl-6 -mx-6 px-6 pb-4 lg:mx-0 lg:px-0 lg:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {/* Mobile layout uses horizontal snap-scroll for single-hand navigation */}
-          {collections.map((col, i) => (
+      {/* Cards — simple responsive grid, no horizontal scroll */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        {collections.map((col, i) => (
+          <div
+            key={i}
+            className="collection-card opacity-0"
+            onMouseMove={handleTilt}
+            onMouseLeave={handleTiltReset}
+            style={{ transformStyle: "preserve-3d" }}
+          >
             <div
-              key={i}
-              onMouseMove={handleTilt}
-              onMouseLeave={handleTiltReset}
-              className="flex-shrink-0 w-[85vw] max-w-[400px] lg:w-[380px] snap-center lg:snap-align-none rounded-2xl p-8 sm:p-10 transition-transform duration-200"
+              className="rounded-2xl p-8 sm:p-10 h-full flex flex-col transition-transform duration-200"
               style={{
-                transformStyle: "preserve-3d",
                 backgroundColor: col.featured ? "var(--crimson)" : "#fff",
                 border: col.featured ? "none" : "1.5px solid rgba(96,0,0,0.12)",
               }}
             >
               {/* Tag */}
               <p
-                className="section-label mb-4"
+                className="section-label mb-2"
                 style={{ color: col.featured ? "rgba(255,255,255,0.5)" : "var(--crimson)" }}
               >
                 {col.tag}
@@ -136,14 +155,30 @@ export default function Collections() {
                 style={{
                   fontSize: "clamp(2rem,4vw,2.8rem)",
                   color: col.featured ? "#fff" : "var(--crimson)",
-                  marginBottom: "1.75rem",
+                  marginBottom: "0.5rem",
                 }}
               >
                 {col.name}
               </h3>
 
+              {/* Tagline */}
+              <p
+                className="text-sm mb-4 italic"
+                style={{ color: col.featured ? "rgba(255,255,255,0.65)" : "rgba(96,0,0,0.55)" }}
+              >
+                {col.tagline}
+              </p>
+
+              {/* Description */}
+              <p
+                className="text-sm leading-relaxed mb-6"
+                style={{ color: col.featured ? "rgba(255,255,255,0.72)" : "rgba(8,8,8,0.55)" }}
+              >
+                {col.description}
+              </p>
+
               {/* Details */}
-              <div className="space-y-5">
+              <div className="space-y-4 flex-1">
                 {[
                   { label: "Best For", value: col.bestFor },
                   { label: "Deliverable", value: col.deliverable },
@@ -165,7 +200,7 @@ export default function Collections() {
 
               <Link
                 href={`/book?collection=${col.slug}`}
-                className="mt-8 inline-block px-7 py-3 rounded-full font-semibold text-sm transition-all duration-200 hover:scale-[1.03]"
+                className="mt-8 inline-block px-7 py-3 rounded-full font-semibold text-sm transition-all duration-200 hover:scale-[1.03] self-start"
                 style={
                   col.featured
                     ? { backgroundColor: "#fff", color: "var(--crimson)" }
@@ -175,14 +210,8 @@ export default function Collections() {
                 Book This Collection →
               </Link>
             </div>
-          ))}
-        </div>
-        <p
-          className="lg:hidden text-center mt-4 text-xs"
-          style={{ color: "rgba(8,8,8,0.4)", letterSpacing: "0.15em" }}
-        >
-          ← SWIPE →
-        </p>
+          </div>
+        ))}
       </div>
     </section>
   );

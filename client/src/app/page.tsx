@@ -7,19 +7,13 @@ import Hero from "@/components/Hero";
 
 const SectionFallback = () => <div aria-hidden="true" style={{ minHeight: "60vh" }} />;
 
-const Pillars = dynamic(() => import("@/components/Pillars"), {
-  loading: SectionFallback,
-});
-const About = dynamic(() => import("@/components/About"), {
-  loading: SectionFallback,
-});
-const Features = dynamic(() => import("@/components/Features"), {
-  loading: SectionFallback,
-});
 const Collections = dynamic(() => import("@/components/Collections"), {
   loading: SectionFallback,
 });
-const Process = dynamic(() => import("@/components/Process"), {
+const Pillars = dynamic(() => import("@/components/Pillars"), {
+  loading: SectionFallback,
+});
+const Features = dynamic(() => import("@/components/Features"), {
   loading: SectionFallback,
 });
 const Portfolio = dynamic(() => import("@/components/Portfolio"), {
@@ -38,23 +32,23 @@ const Footer = dynamic(() => import("@/components/Footer"), {
   loading: () => <div aria-hidden="true" style={{ minHeight: "20vh" }} />,
 });
 const MobileStickyCTA = dynamic(() => import("@/components/MobileStickyCTA"));
+const WhatsAppSticky = dynamic(() => import("@/components/WhatsAppSticky"));
 
 export default function Home() {
   return (
     <main>
       <Navbar />
       <Hero />
-      <Pillars />
-      <About />
-      <Features />
       <Collections />
-      <Process />
+      <Pillars />
+      <Features />
       <Portfolio />
       <Reviews />
       <FAQ />
       <FooterCTA />
       <Footer />
       <MobileStickyCTA />
+      <WhatsAppSticky />
     </main>
   );
 }

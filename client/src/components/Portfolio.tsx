@@ -9,7 +9,7 @@ import Link from "next/link";
 gsap.registerPlugin(ScrollTrigger);
 
 const reels = [
-  { id: 1, src: null,              title: "Reel 01", alt: "Business reel 1 — The Raw Cuts" },
+  { id: 1, src: "/reels/reel_1.mp4", title: "Reel 01", alt: "Business reel 1 — The Raw Cuts" },
   { id: 2, src: "/reels/reel_2.mp4", title: "Reel 02", alt: "Business reel 2 — The Raw Cuts" },
   { id: 3, src: "/reels/reel_3.mp4", title: "Reel 03", alt: "Business reel 3 — The Raw Cuts" },
   { id: 4, src: "/reels/reel_4.mp4", title: "Reel 04", alt: "Business reel 4 — The Raw Cuts" },
@@ -184,7 +184,7 @@ export default function Portfolio() {
                         backfaceVisibility: "hidden",
                       }}
                     >
-                      {reel.src ? (
+                      {reel.src && (
                         <video
                           ref={(el) => { videoRefs.current[i] = el; }}
                           src={reel.src}
@@ -195,11 +195,6 @@ export default function Portfolio() {
                           preload="metadata"
                           aria-label={reel.alt}
                         />
-                      ) : (
-                        /* reel_1 is .MOV — convert to mp4 for browser support */
-                        <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "var(--crimson)" }}>
-                          <p className="text-white/60 text-xs text-center px-4">Reel 01<br/>(convert to mp4)</p>
-                        </div>
                       )}
                     </div>
                   ))}
