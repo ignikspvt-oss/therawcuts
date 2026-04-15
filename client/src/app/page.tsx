@@ -9,6 +9,7 @@ const SectionFallback = () => <div aria-hidden="true" style={{ minHeight: "60vh"
 
 const Collections = dynamic(() => import("@/components/Collections"), {
   loading: SectionFallback,
+  ssr: false,
 });
 const Pillars = dynamic(() => import("@/components/Pillars"), {
   loading: SectionFallback,
