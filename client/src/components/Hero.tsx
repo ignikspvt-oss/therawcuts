@@ -174,7 +174,7 @@ export default function Hero() {
             fontSize: "min(calc((100vw - 3rem) / 20), 3.85rem)",
             whiteSpace: "nowrap",
             clipPath: "inset(0 100% 0 0)",
-            textTransform: "uppercase",
+
           }}
         >
           #MainCharacterEnergy
