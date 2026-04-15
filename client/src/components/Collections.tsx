@@ -191,7 +191,10 @@ export default function Collections() {
                     >
                       {row.label}
                     </p>
-                    <p style={{ color: col.featured ? "rgba(255,255,255,0.85)" : "var(--crimson)" }}>
+                    <p
+                      suppressHydrationWarning={row.label === "Pricing"}
+                      style={{ color: col.featured ? "rgba(255,255,255,0.85)" : "var(--crimson)" }}
+                    >
                       {row.value}
                     </p>
                   </div>
