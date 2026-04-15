@@ -3,7 +3,6 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { HiArrowLeft, HiCheckCircle, HiMinus, HiPlus } from "react-icons/hi2";
 import { createBooking, validateCoupon, createPaymentOrder, verifyPayment } from "@/lib/api";
@@ -276,16 +275,10 @@ function BookingFormContent() {
             Back to Home
           </Link>
 
-          <div className="flex items-center gap-3 mb-6">
-            <Image
-              src="/images/logo.jpeg"
-              alt="The Raw Cuts"
-              width={36}
-              height={36}
-              style={{ height: "auto" }}
-              className="rounded"
-            />
-            <span className="brand-logo text-white text-lg">the raw cuts</span>
+          <div className="mb-6">
+            <span className="brand-logo text-white" style={{ fontSize: "1.5rem" }}>
+              the raw cuts.
+            </span>
           </div>
 
           <h1 className="headline text-white" style={{ fontSize: "clamp(2.2rem,6vw,3.5rem)" }}>

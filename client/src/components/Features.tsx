@@ -7,13 +7,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const features = [
-  { num: "01", title: "24-Hour Turnaround",         desc: "Your reel is delivered within 24 hours of your shoot — edited, polished, and ready to post."                           },
-  { num: "02", title: "Per Reel Pricing",            desc: "Pay for exactly what you create. No mystery fees. Every collection is priced per reel."                               },
-  { num: "03", title: "Discovery Call First",        desc: "We learn your story, your brand, your vibe — so the final reel feels unmistakably you."                               },
-  { num: "04", title: "Reference-Friendly Process",  desc: "Got a reel you love? Share it. We use your references as a creative springboard."                                     },
-  { num: "05", title: "Clean, Intentional Edits",    desc: "No over-filtering. No gimmicky transitions. Just tight editing that keeps the viewer watching."                       },
-  { num: "06", title: "Private Online Delivery",     desc: "Your final reel is delivered directly to you — discreet, fast, and in full quality."                                  },
-  { num: "07", title: "Story-Driven Direction",      desc: "We don't just capture moments — we shape them into a story that holds attention."                                     },
+  { num: "01", title: "Per Reel Pricing",            desc: "Pay for exactly what you create. No mystery fees. Every collection is priced per reel."                               },
+  { num: "02", title: "Discovery Call First",        desc: "We learn your story, your brand, your vibe — so the final reel feels unmistakably you."                               },
+  { num: "03", title: "Reference-Friendly Process",  desc: "Got a reel you love? Share it. We use your references as a creative springboard."                                     },
+  { num: "04", title: "Clean, Intentional Edits",    desc: "No over-filtering. No gimmicky transitions. Just tight editing that keeps the viewer watching."                       },
+  { num: "05", title: "Private Online Delivery",     desc: "Your final reel is delivered directly to you — discreet, fast, and in full quality."                                  },
+  { num: "06", title: "Story-Driven Direction",      desc: "We don't just capture moments — we shape them into a story that holds attention."                                     },
 ];
 
 const cardOffsets: { ml: string; mr: string; maxW: string; variant: "crimson" | "white" }[] = [
@@ -23,7 +22,6 @@ const cardOffsets: { ml: string; mr: string; maxW: string; variant: "crimson" | 
   { ml: "auto", mr: "5%",   maxW: "500px", variant: "white"   },
   { ml: "5%",   mr: "auto", maxW: "480px", variant: "crimson" },
   { ml: "auto", mr: "8%",   maxW: "520px", variant: "white"   },
-  { ml: "12%",  mr: "auto", maxW: "480px", variant: "crimson" },
 ];
 
 export default function Features() {
