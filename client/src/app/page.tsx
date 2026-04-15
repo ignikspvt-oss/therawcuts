@@ -1,16 +1,12 @@
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import CollectionsClient from "@/components/CollectionsClient";
 
 // Above-the-fold components remain statically imported for fastest paint.
 // Below-the-fold components are code-split and rendered when they enter viewport.
 
 const SectionFallback = () => <div aria-hidden="true" style={{ minHeight: "60vh" }} />;
-
-const Collections = dynamic(() => import("@/components/Collections"), {
-  loading: SectionFallback,
-  ssr: false,
-});
 const Pillars = dynamic(() => import("@/components/Pillars"), {
   loading: SectionFallback,
 });
@@ -40,7 +36,7 @@ export default function Home() {
     <main>
       <Navbar />
       <Hero />
-      <Collections />
+      <CollectionsClient />
       <Pillars />
       <Features />
       <Portfolio />
