@@ -674,7 +674,9 @@ function BookingFormContent() {
               ) : isCanada ? (
                 "Request Booking →"
               ) : (
-                `Confirm & Pay ${formatPrice(displayPrice)} →`
+                form.collection
+                  ? `Confirm & Pay ${formatPrice(displayPrice)} →`
+                  : "Confirm & Pay →"
               )}
             </button>
           </div>
