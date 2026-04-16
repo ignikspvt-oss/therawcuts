@@ -26,13 +26,6 @@ interface RazorpayOptions {
   prefill: { name: string; email: string; contact?: string };
   theme: { color: string };
   modal: { ondismiss: () => void };
-  config?: {
-    display?: {
-      blocks?: Record<string, { name: string; instruments: Array<{ method: string }> }>;
-      sequence?: string[];
-      preferences?: { show_default_blocks?: boolean };
-    };
-  };
 }
 
 interface RazorpayInstance {
@@ -229,30 +222,6 @@ function BookingFormContent() {
           name: form.fullName.trim(),
           email: form.email.trim(),
           ...(contact ? { contact } : {}),
-        },
-        // UPI Collect (UPI ID entry) was deprecated by NPCI on Feb 28, 2026.
-        // This config promotes UPI Intent (launch UPI app) and QR prominently,
-        // then shows cards / netbanking / wallets / EMI as secondary methods.
-        config: {
-          display: {
-            blocks: {
-              upi: {
-                name: "Pay via UPI",
-                instruments: [{ method: "upi" }],
-              },
-              other: {
-                name: "Other Payment Modes",
-                instruments: [
-                  { method: "card" },
-                  { method: "netbanking" },
-                  { method: "wallet" },
-                  { method: "emi" },
-                ],
-              },
-            },
-            sequence: ["block.upi", "block.other"],
-            preferences: { show_default_blocks: false },
-          },
         },
         theme: { color: "#600000" },
         modal: { ondismiss: () => setProcessing(false) },
