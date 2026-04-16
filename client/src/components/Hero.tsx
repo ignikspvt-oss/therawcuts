@@ -157,7 +157,7 @@ export default function Hero() {
             fontFamily: "var(--font-brand), Arial, sans-serif",
             textTransform: "uppercase",
           }}>
-            HELLO MAIN CHARACTER ENERGY
+            HELLO MAIN CHARACTER 
           </p>
         </div>
 

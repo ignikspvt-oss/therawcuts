@@ -6,7 +6,6 @@ const Booking = require("../models/Booking");
 const Transaction = require("../models/Transaction");
 const Coupon = require("../models/Coupon");
 const validate = require("../middleware/validate");
-const { doubleCsrfProtection } = require("../middleware/csrf");
 const { sendBookingConfirmation } = require("../lib/email");
 
 const router = express.Router();
@@ -47,7 +46,7 @@ const verifySchema = {
 };
 
 // POST /api/payments/create-order — Create real Razorpay order (India only)
-router.post("/create-order", paymentLimiter, doubleCsrfProtection, validate(createOrderSchema), async (req, res) => {
+router.post("/create-order", paymentLimiter, validate(createOrderSchema), async (req, res) => {
   try {
     const { bookingId } = req.body;
 
@@ -142,7 +141,7 @@ router.post("/create-order", paymentLimiter, doubleCsrfProtection, validate(crea
 });
 
 // POST /api/payments/verify — Verify Razorpay payment signature
-router.post("/verify", paymentLimiter, doubleCsrfProtection, validate(verifySchema), async (req, res) => {
+router.post("/verify", paymentLimiter, validate(verifySchema), async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bookingId } = req.body;
 

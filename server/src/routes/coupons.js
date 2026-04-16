@@ -3,8 +3,6 @@ const rateLimit = require("express-rate-limit");
 const Coupon = require("../models/Coupon");
 const requireAuth = require("../middleware/auth");
 const validate = require("../middleware/validate");
-const { doubleCsrfProtection } = require("../middleware/csrf");
-
 const router = express.Router();
 
 const couponValidateLimiter = rateLimit({
@@ -110,7 +108,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
 });
 
 // POST /api/coupons/validate — Public: validate coupon code
-router.post("/validate", couponValidateLimiter, doubleCsrfProtection, validate(validateCouponSchema), async (req, res) => {
+router.post("/validate", couponValidateLimiter, validate(validateCouponSchema), async (req, res) => {
   try {
     const { code, collection, quantity, country } = req.body;
     const userCountry = country || "india";

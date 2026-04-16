@@ -6,11 +6,6 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
-const {
-  generateCsrfToken,
-  invalidCsrfTokenError,
-} = require("./middleware/csrf");
-
 const authRoutes = require("./routes/auth");
 const bookingRoutes = require("./routes/bookings");
 const paymentRoutes = require("./routes/payments");
@@ -74,7 +69,7 @@ app.use(
 
 // Body parsing
 app.use(express.json({ limit: "1mb" }));
-app.use(cookieParser(process.env.CSRF_SECRET || process.env.JWT_SECRET));
+app.use(cookieParser());
 
 // Global rate limiter — 100 req per 15min per IP
 const globalLimiter = rateLimit({
@@ -85,12 +80,6 @@ const globalLimiter = rateLimit({
   message: { error: "Too many requests. Please try again later." },
 });
 app.use("/api", globalLimiter);
-
-// Endpoint to issue CSRF token to client
-app.get("/api/csrf-token", (req, res) => {
-  const token = generateCsrfToken(req, res);
-  res.json({ csrfToken: token });
-});
 
 // Health check
 app.get("/api/health", (req, res) => {
@@ -111,10 +100,7 @@ app.use((req, res) => {
 });
 
 // Global error handler
-app.use((err, req, res, next) => {
-  if (err === invalidCsrfTokenError || err.code === "EBADCSRFTOKEN") {
-    return res.status(403).json({ error: "Invalid or missing CSRF token" });
-  }
+app.use((err, _req, res, _next) => {
   console.error("Unhandled error:", err.message);
   res.status(500).json({ error: "Internal server error" });
 });

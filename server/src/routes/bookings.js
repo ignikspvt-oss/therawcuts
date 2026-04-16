@@ -4,8 +4,6 @@ const Booking = require("../models/Booking");
 const Transaction = require("../models/Transaction");
 const requireAuth = require("../middleware/auth");
 const validate = require("../middleware/validate");
-const { doubleCsrfProtection } = require("../middleware/csrf");
-
 const router = express.Router();
 
 const bookingCreateLimiter = rateLimit({
@@ -32,7 +30,7 @@ const bookingSchema = {
 };
 
 // POST /api/bookings — Public: create a new booking
-router.post("/", bookingCreateLimiter, doubleCsrfProtection, validate(bookingSchema), async (req, res) => {
+router.post("/", bookingCreateLimiter, validate(bookingSchema), async (req, res) => {
   try {
     const { fullName, email, phone, eventDetails, referenceUrl, selectedCollection, quantity, couponCode, country } = req.body;
 

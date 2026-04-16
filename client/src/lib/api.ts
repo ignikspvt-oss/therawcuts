@@ -6,31 +6,10 @@ const api = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
   timeout: 15000,
-  withCredentials: true, // required for CSRF cookie
+  withCredentials: false,
 });
 
-// ——— CSRF token management ———
-let csrfToken: string | null = null;
-let csrfPromise: Promise<string> | null = null;
-
-const fetchCsrfToken = async (): Promise<string> => {
-  if (csrfPromise) return csrfPromise;
-  csrfPromise = axios
-    .get(`${BASE_URL}/csrf-token`, { withCredentials: true })
-    .then((res) => {
-      csrfToken = res.data.csrfToken;
-      csrfPromise = null;
-      return csrfToken as string;
-    })
-    .catch((err) => {
-      csrfPromise = null;
-      throw err;
-    });
-  return csrfPromise;
-};
-
 // ——— Token refresh state ———
-let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
 const refreshAccessToken = async (): Promise<string | null> => {
@@ -39,7 +18,6 @@ const refreshAccessToken = async (): Promise<string | null> => {
     typeof window !== "undefined" ? localStorage.getItem("admin_refresh_token") : null;
   if (!refreshToken) return null;
 
-  isRefreshing = true;
   refreshPromise = axios
     .post(`${BASE_URL}/auth/refresh`, { refreshToken }, { withCredentials: true })
     .then((res) => {
@@ -58,7 +36,6 @@ const refreshAccessToken = async (): Promise<string | null> => {
       return null;
     })
     .finally(() => {
-      isRefreshing = false;
       refreshPromise = null;
     });
   return refreshPromise;
@@ -74,23 +51,6 @@ api.interceptors.request.use(async (config) => {
     }
   }
 
-  // Attach CSRF token for mutating public requests
-  const method = (config.method || "get").toLowerCase();
-  const mutating = ["post", "put", "patch", "delete"].includes(method);
-  const isAuthRoute = config.url?.includes("/auth/");
-  if (mutating && !isAuthRoute) {
-    if (!csrfToken) {
-      try {
-        await fetchCsrfToken();
-      } catch {
-        // proceed; server will 403 and we'll retry below
-      }
-    }
-    if (csrfToken) {
-      config.headers["x-csrf-token"] = csrfToken;
-    }
-  }
-
   return config;
 });
 
@@ -100,27 +60,6 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
     const status = error.response?.status;
-    const data = error.response?.data as { error?: string } | undefined;
-
-    // CSRF token invalid/missing — refresh and retry once
-    if (
-      status === 403 &&
-      data?.error?.toLowerCase().includes("csrf") &&
-      originalRequest &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-      csrfToken = null;
-      try {
-        const newToken = await fetchCsrfToken();
-        if (originalRequest.headers) {
-          originalRequest.headers["x-csrf-token"] = newToken;
-        }
-        return api(originalRequest);
-      } catch {
-        // fall through
-      }
-    }
 
     // 401 on admin route — attempt refresh token flow
     if (
