@@ -12,7 +12,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit: NonNullable<React.ComponentProps<"form">["onSubmit"]> = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);

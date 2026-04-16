@@ -68,7 +68,7 @@ export default function AdminCouponsPage() {
     fetchCoupons();
   }, [fetchCoupons]);
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleCreate: NonNullable<React.ComponentProps<"form">["onSubmit"]> = async (e) => {
     e.preventDefault();
     setFormError("");
     setFormLoading(true);

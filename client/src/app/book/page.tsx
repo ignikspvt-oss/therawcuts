@@ -23,9 +23,16 @@ interface RazorpayOptions {
   description: string;
   order_id: string;
   handler: (response: RazorpayResponse) => void;
-  prefill: { name: string; email: string; contact: string };
+  prefill: { name: string; email: string; contact?: string };
   theme: { color: string };
   modal: { ondismiss: () => void };
+  config?: {
+    display?: {
+      blocks?: Record<string, { name: string; instruments: Array<{ method: string }> }>;
+      sequence?: string[];
+      preferences?: { show_default_blocks?: boolean };
+    };
+  };
 }
 
 interface RazorpayInstance {
@@ -82,6 +89,9 @@ function BookingFormContent() {
   const [processing, setProcessing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState("");
+  // Tracks a booking created but not yet paid — reused on Razorpay modal retry
+  // so we don't create a duplicate pending booking each time the modal is dismissed.
+  const [pendingBookingId, setPendingBookingId] = useState<string | null>(null);
 
   const currentMeta = COLLECTION_META[form.collection] || COLLECTION_META["social-cuts"];
   const currentPrice = prices[form.collection as keyof typeof prices] ?? prices["social-cuts"];
@@ -94,6 +104,7 @@ function BookingFormContent() {
     const newMeta = COLLECTION_META[slug] || COLLECTION_META["social-cuts"];
     setForm({ ...form, collection: slug });
     setQuantity(newMeta.minQty);
+    setPendingBookingId(null);
     if (couponApplied) {
       setCouponApplied(false);
       setCouponMessage("");
@@ -106,6 +117,7 @@ function BookingFormContent() {
       const next = prev + delta;
       return next < currentMeta.minQty ? currentMeta.minQty : next;
     });
+    setPendingBookingId(null);
     if (couponApplied) {
       setCouponApplied(false);
       setCouponMessage("");
@@ -166,20 +178,31 @@ function BookingFormContent() {
     setSubmitError("");
 
     try {
-      const { data: bookingData } = await createBooking({
-        fullName: form.fullName.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        eventDetails: form.eventDetails.trim(),
-        referenceUrl: form.referenceUrl.trim(),
-        selectedCollection: form.collection,
-        quantity,
-        couponCode: couponApplied ? couponCode.trim() : "",
-        country: "india",
-      });
+      // Reuse a pending booking if the user dismissed the modal and is retrying,
+      // so we don't accumulate orphaned pending bookings on each attempt.
+      let bookingId = pendingBookingId;
 
-      const { data: orderData } = await createPaymentOrder(bookingData.booking._id);
+      if (!bookingId) {
+        const { data: bookingData } = await createBooking({
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          eventDetails: form.eventDetails.trim(),
+          referenceUrl: form.referenceUrl.trim(),
+          selectedCollection: form.collection,
+          quantity,
+          couponCode: couponApplied ? couponCode.trim() : "",
+          country: "india",
+        });
+        bookingId = bookingData.booking._id;
+        setPendingBookingId(bookingId);
+      }
 
+      // After the if-block bookingId is guaranteed non-null; capture as const for closure.
+      const activeBookingId = bookingId as string;
+      const { data: orderData } = await createPaymentOrder(activeBookingId);
+
+      const contact = form.phone.trim();
       const options: RazorpayOptions = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || orderData.keyId,
         amount: orderData.amountInPaise,
@@ -193,8 +216,9 @@ function BookingFormContent() {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              bookingId: bookingData.booking._id,
+              bookingId: activeBookingId,
             });
+            setPendingBookingId(null);
             router.push("/book/confirmation");
           } catch {
             setSubmitError("Payment verification failed. Please contact support.");
@@ -204,17 +228,47 @@ function BookingFormContent() {
         prefill: {
           name: form.fullName.trim(),
           email: form.email.trim(),
-          contact: form.phone.trim(),
+          ...(contact ? { contact } : {}),
+        },
+        // UPI Collect (UPI ID entry) was deprecated by NPCI on Feb 28, 2026.
+        // This config promotes UPI Intent (launch UPI app) and QR prominently,
+        // then shows cards / netbanking / wallets / EMI as secondary methods.
+        config: {
+          display: {
+            blocks: {
+              upi: {
+                name: "Pay via UPI",
+                instruments: [{ method: "upi" }],
+              },
+              other: {
+                name: "Other Payment Modes",
+                instruments: [
+                  { method: "card" },
+                  { method: "netbanking" },
+                  { method: "wallet" },
+                  { method: "emi" },
+                ],
+              },
+            },
+            sequence: ["block.upi", "block.other"],
+            preferences: { show_default_blocks: false },
+          },
         },
         theme: { color: "#600000" },
         modal: { ondismiss: () => setProcessing(false) },
       };
 
+      if (!window.Razorpay) {
+        setSubmitError("Payment gateway failed to load. Please refresh the page and try again.");
+        setProcessing(false);
+        return;
+      }
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (err: unknown) {
       const error = err as { response?: { data?: { error?: string } } };
       setSubmitError(error.response?.data?.error || "Something went wrong. Please try again.");
+      setPendingBookingId(null);
       setProcessing(false);
     }
   };
@@ -245,7 +299,7 @@ function BookingFormContent() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit: NonNullable<React.ComponentProps<"form">["onSubmit"]> = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     if (isCanada) {

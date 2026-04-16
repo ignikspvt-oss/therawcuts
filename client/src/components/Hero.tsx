@@ -17,7 +17,6 @@ export default function Hero() {
   const sectionRef  = useRef<HTMLElement>(null);
   const line1Ref    = useRef<HTMLDivElement>(null);
   const tagRef      = useRef<HTMLDivElement>(null);
-  const taglineRef  = useRef<HTMLParagraphElement>(null);
   const subRef      = useRef<HTMLParagraphElement>(null);
   const ctaRef      = useRef<HTMLDivElement>(null);
   const statsRef    = useRef<HTMLDivElement>(null);
@@ -48,7 +47,7 @@ export default function Hero() {
         // Simple fade-in for all hero elements
         gsap.set(line1Ref.current, { clipPath: "inset(0 0% 0 0)" });
         gsap.set(rulerRef.current, { scaleX: 1 });
-        gsap.to([taglineRef.current, subRef.current], { opacity: 1, duration: 0.3, delay: 0.2 });
+        gsap.to(subRef.current, { opacity: 1, duration: 0.3, delay: 0.2 });
         if (ctaRef.current)
           gsap.to(Array.from(ctaRef.current.children), { opacity: 1, duration: 0.3, delay: 0.3 });
         if (statsRef.current)
@@ -61,9 +60,6 @@ export default function Hero() {
       tl.fromTo(line1Ref.current,
           { clipPath: "inset(0 100% 0 0)" },
           { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power4.inOut" }, 1.5)
-        .fromTo(taglineRef.current,
-          { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.5 }, 2.3)
         .fromTo(rulerRef.current,
           { scaleX: 0 },
           { scaleX: 1, duration: 0.55, ease: "power3.inOut", transformOrigin: "left" }, 2.42)
@@ -180,20 +176,7 @@ export default function Hero() {
           #MainCharacterEnergy
         </div>
 
-        {/* Tagline */}
-        <p
-          ref={taglineRef}
-          className="text-center opacity-0"
-          style={{
-            fontSize: "clamp(0.7rem, 1.4vw, 1rem)",
-            letterSpacing: "clamp(0.08em, 0.5vw, 0.2em)",
-            color: "rgba(255,255,255,0.4)",
-            marginTop: "0.5rem",
-            fontFamily: "var(--font-brand), Arial, sans-serif",
-          }}
-        >
-          #MainCharacterEnergy
-        </p>
+        
 
         {/* Crimson ruler — centered on mobile, left on desktop */}
         <div

@@ -27,7 +27,7 @@ router.get("/stats", requireAuth, async (req, res) => {
       Booking.countDocuments({ status: "pending" }),
       // India revenue: sum of paid INR transactions
       Transaction.aggregate([
-        { $match: { status: "paid", currency: { $in: ["INR", null, undefined] } } },
+        { $match: { status: "paid", currency: "INR" } },
         { $group: { _id: null, total: { $sum: "$amount" }, count: { $sum: 1 } } },
       ]),
       // Canada revenue: confirmed bookings × CAD unit price
