@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { HiArrowLeft, HiCheckCircle, HiMinus, HiPlus } from "react-icons/hi2";
 import { createBooking, validateCoupon, createPaymentOrder, verifyPayment } from "@/lib/api";
@@ -299,9 +300,14 @@ function BookingFormContent() {
           </Link>
 
           <div className="mb-6">
-            <span className="brand-logo text-white" style={{ fontSize: "1.5rem" }}>
-              the raw cuts.
-            </span>
+            <Image
+              src="/logo_white.PNG"
+              alt="the raw cuts"
+              width={140}
+              height={40}
+              className="object-contain"
+              style={{ height: "2rem", width: "auto" }}
+            />
           </div>
 
           <h1 className="headline text-white" style={{ fontSize: "clamp(2.2rem,6vw,3.5rem)" }}>

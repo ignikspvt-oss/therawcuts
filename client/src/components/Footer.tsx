@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 const navLinks = ["Collections", "Portfolio", "Reviews", "FAQs"];
 
@@ -14,15 +15,17 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto">
         {/* Top row */}
         <div className="flex flex-col md:flex-row items-start justify-between gap-12">
-          {/* Brand — text only, no logo image */}
+          {/* Brand */}
           <div className="max-w-xs">
-            <Link href="/" className="group">
-              <span
-                className="brand-logo text-white"
-                style={{ fontSize: "1rem", letterSpacing: "0.16em" }}
-              >
-                the raw cuts.
-              </span>
+            <Link href="/" className="group inline-block">
+              <Image
+                src="/logo_white.PNG"
+                alt="the raw cuts"
+                width={120}
+                height={34}
+                className="object-contain"
+                style={{ height: "1.75rem", width: "auto" }}
+              />
             </Link>
             <p className="mt-4 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
               We shoot, edit, and deliver your reel — in under 24 hours.

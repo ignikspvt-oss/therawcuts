@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import Image from "next/image";
 import { useLocation } from "@/context/LocationContext";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -77,15 +78,39 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={navStyle}
       >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Logo — text only */}
+        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <span
-              className="brand-logo tracking-normal"
-              style={{ fontSize: "1.5rem", color: logoTextColor, transition: "color 0.4s ease" }}
-            >
-              the raw cuts.
-            </span>
+            <Image
+              src="/logo_white.PNG"
+              alt="the raw cuts"
+              width={140}
+              height={40}
+              className="object-contain"
+              style={{
+                height: "1.5rem",
+                width: "auto",
+                opacity: scrolled ? 0 : 1,
+                position: scrolled ? "absolute" : "relative",
+                transition: "opacity 0.4s ease",
+                pointerEvents: "none",
+              }}
+            />
+            <Image
+              src="/logo_red.PNG"
+              alt="the raw cuts"
+              width={140}
+              height={40}
+              className="object-contain"
+              style={{
+                height: "1.5rem",
+                width: "auto",
+                opacity: scrolled ? 1 : 0,
+                position: scrolled ? "relative" : "absolute",
+                transition: "opacity 0.4s ease",
+                pointerEvents: "none",
+              }}
+            />
           </Link>
 
           {/* Desktop links */}
