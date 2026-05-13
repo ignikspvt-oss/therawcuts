@@ -105,6 +105,54 @@ app.get("/api/debug-uri", (req, res) => {
   }
 });
 
+// TEMP: try connecting from Vercel and return the real error — REMOVE after debugging
+app.get("/api/debug-connect", async (req, res) => {
+  const dns = require("dns").promises;
+  const { MongoClient } = require("mongodb");
+  const uri = process.env.MONGODB_URI;
+  const result = { node: process.version, region: process.env.VERCEL_REGION || "unknown" };
+
+  try {
+    const u = new URL(uri.replace("mongodb+srv://", "https://"));
+    result.host = u.hostname;
+    try {
+      const srv = await dns.resolveSrv(`_mongodb._tcp.${u.hostname}`);
+      result.srv = srv.map(r => `${r.name}:${r.port}`);
+    } catch (e) {
+      result.srvError = `${e.code || ""} ${e.message}`;
+    }
+  } catch (e) {
+    result.urlParseError = e.message;
+  }
+
+  const client = new MongoClient(uri, { serverSelectionTimeoutMS: 8000 });
+  try {
+    await client.connect();
+    await client.db().admin().ping();
+    result.connect = "OK";
+  } catch (e) {
+    result.connect = "FAIL";
+    result.errorName = e.name;
+    result.errorMessage = e.message;
+    result.errorCode = e.code;
+    if (e.cause) result.errorCause = String(e.cause).slice(0, 500);
+    if (e.reason) {
+      result.errorReason = {
+        type: e.reason.type,
+        servers: e.reason.servers ? Array.from(e.reason.servers.entries()).map(([h, s]) => ({
+          host: h,
+          type: s.type,
+          error: s.error ? String(s.error).slice(0, 300) : null,
+        })) : null,
+      };
+    }
+  } finally {
+    try { await client.close(); } catch {}
+  }
+
+  res.json(result);
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
