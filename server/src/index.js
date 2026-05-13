@@ -86,6 +86,25 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+// TEMP: debug URI on Vercel — REMOVE after debugging
+app.get("/api/debug-uri", (req, res) => {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) return res.json({ set: false });
+  try {
+    const u = new URL(uri.replace("mongodb+srv://", "https://"));
+    res.json({
+      set: true,
+      length: uri.length,
+      host: u.hostname,
+      user: u.username,
+      passwordLength: u.password.length,
+      db: u.pathname,
+    });
+  } catch (e) {
+    res.json({ set: true, parseError: e.message, length: uri.length });
+  }
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
