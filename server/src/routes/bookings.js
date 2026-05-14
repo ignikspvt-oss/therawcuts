@@ -17,7 +17,7 @@ const bookingCreateLimiter = rateLimit({
 const bookingSchema = {
   fullName: { required: true, type: "string", maxLength: 200 },
   email: { required: true, type: "string", pattern: /^\S+@\S+\.\S+$/ },
-  phone: { type: "string", maxLength: 15 },
+  phone: { required: true, type: "string", maxLength: 20, pattern: /^[\d\s+\-().]{10,}$/ },
   eventDetails: { required: true, type: "string", maxLength: 2000 },
   referenceUrl: { type: "string", maxLength: 500 },
   selectedCollection: {

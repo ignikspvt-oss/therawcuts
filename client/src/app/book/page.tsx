@@ -70,7 +70,7 @@ function BookingFormContent() {
     referenceUrl: "",
     collection: collectionSlug,
   });
-  const [quantity, setQuantity] = useState(meta.minQty);
+  const [quantity, setQuantity] = useState(collectionSlug ? meta.minQty : 0);
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponMessage, setCouponMessage] = useState("");
@@ -88,7 +88,10 @@ function BookingFormContent() {
   const [pendingBookingId, setPendingBookingId] = useState<string | null>(null);
 
   const currentMeta = COLLECTION_META[form.collection] || COLLECTION_META["social-cuts"];
-  const currentPrice = prices[form.collection as keyof typeof prices] ?? prices["social-cuts"];
+  const hasCollection = Boolean(form.collection);
+  const currentPrice = hasCollection
+    ? prices[form.collection as keyof typeof prices] ?? 0
+    : 0;
   const baseTotal = currentPrice * quantity;
   const displayPrice = discountInfo ? discountInfo.finalPrice : baseTotal;
 
@@ -97,7 +100,7 @@ function BookingFormContent() {
   const handleCollectionChange = (slug: string) => {
     const newMeta = COLLECTION_META[slug] || COLLECTION_META["social-cuts"];
     setForm({ ...form, collection: slug });
-    setQuantity(newMeta.minQty);
+    setQuantity(slug ? newMeta.minQty : 0);
     setPendingBookingId(null);
     if (couponApplied) {
       setCouponApplied(false);
@@ -107,6 +110,7 @@ function BookingFormContent() {
   };
 
   const handleQuantityChange = (delta: number) => {
+    if (!hasCollection) return;
     setQuantity((prev) => {
       const next = prev + delta;
       return next < currentMeta.minQty ? currentMeta.minQty : next;
@@ -124,6 +128,9 @@ function BookingFormContent() {
     if (!form.fullName.trim()) errs.fullName = "Full name is required";
     if (!form.email.trim()) errs.email = "Email is required";
     else if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) errs.email = "Enter a valid email";
+    if (!form.phone.trim()) errs.phone = "Phone number is required";
+    else if (form.phone.replace(/\D/g, "").length < 10)
+      errs.phone = "Enter a valid phone number (at least 10 digits)";
     if (!form.eventDetails.trim()) errs.eventDetails = "Please tell us about your shoot";
     if (!form.collection) errs.collection = "Please select a collection";
     setErrors(errs);
@@ -389,8 +396,7 @@ function BookingFormContent() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: "#600000" }}>
-                Phone Number{" "}
-                <span className="text-xs" style={{ color: "rgba(96,0,0,0.5)" }}>Optional</span>
+                Phone Number <span style={{ color: "var(--crimson)" }}>*</span>
               </label>
               <input
                 type="tel"
@@ -400,12 +406,15 @@ function BookingFormContent() {
                 className="w-full rounded-xl px-4 py-3.5 transition-colors focus:outline-none"
                 style={{
                   background: "#fff",
-                  border: "1.5px solid rgba(96,0,0,0.15)",
+                  border: errors.phone ? "1.5px solid var(--crimson)" : "1.5px solid rgba(96,0,0,0.15)",
                   color: "#600000",
                 }}
                 onFocus={(e) => (e.currentTarget.style.borderColor = "var(--crimson)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(96,0,0,0.15)")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = errors.phone ? "var(--crimson)" : "rgba(96,0,0,0.15)")}
               />
+              {errors.phone && (
+                <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.phone}</p>
+              )}
             </div>
           </div>
 
@@ -496,14 +505,14 @@ function BookingFormContent() {
               <button
                 type="button"
                 onClick={() => handleQuantityChange(-1)}
-                disabled={quantity <= currentMeta.minQty}
+                disabled={!hasCollection || quantity <= currentMeta.minQty}
                 className="w-11 h-11 rounded-lg flex items-center justify-center transition-all font-bold touch-manipulation"
                 style={{
                   border: "1.5px solid var(--crimson)",
                   color: "var(--crimson)",
                   background: "#fff",
-                  opacity: quantity <= currentMeta.minQty ? 0.35 : 1,
-                  cursor: quantity <= currentMeta.minQty ? "not-allowed" : "pointer",
+                  opacity: !hasCollection || quantity <= currentMeta.minQty ? 0.35 : 1,
+                  cursor: !hasCollection || quantity <= currentMeta.minQty ? "not-allowed" : "pointer",
                 }}
               >
                 <HiMinus className="w-4 h-4" />
@@ -516,11 +525,14 @@ function BookingFormContent() {
               <button
                 type="button"
                 onClick={() => handleQuantityChange(1)}
+                disabled={!hasCollection}
                 className="w-11 h-11 rounded-lg flex items-center justify-center transition-all font-bold touch-manipulation"
                 style={{
                   border: "1.5px solid var(--crimson)",
                   color: "#fff",
                   background: "var(--crimson)",
+                  opacity: !hasCollection ? 0.35 : 1,
+                  cursor: !hasCollection ? "not-allowed" : "pointer",
                 }}
               >
                 <HiPlus className="w-4 h-4" />

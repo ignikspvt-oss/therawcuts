@@ -145,6 +145,25 @@ export default function Footer() {
             #HelloMainCharacter
           </p>
         </div>
+
+        {/* Made-by credit */}
+        <p
+          className="mt-6 text-center"
+          style={{ color: "rgba(255,255,255,0.3)", fontSize: "0.7rem" }}
+        >
+          Made by{" "}
+          <a
+            href="https://igniks.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors duration-200"
+            style={{ color: "rgba(255,255,255,0.45)" }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#fff")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)")}
+          >
+            igniks.com
+          </a>
+        </p>
       </div>
     </footer>
   );

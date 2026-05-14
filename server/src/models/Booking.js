@@ -17,9 +17,10 @@ const bookingSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
+      required: [true, "Phone number is required"],
       trim: true,
-      maxlength: [15, "Phone number cannot exceed 15 characters"],
-      default: "",
+      maxlength: [20, "Phone number cannot exceed 20 characters"],
+      match: [/^[\d\s+\-().]{10,}$/, "Please enter a valid phone number"],
     },
     eventDetails: {
       type: String,

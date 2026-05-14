@@ -1,20 +1,37 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     // Only show on desktop, non-admin pages, non-touch devices, non-reduced-motion
-    if (typeof window === "undefined" || window.innerWidth < 768) return;
-    if (pathname.startsWith("/admin")) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (typeof window === "undefined" || window.innerWidth < 768) {
+      setActive(false);
+      return;
+    }
+    if (pathname.startsWith("/admin")) {
+      setActive(false);
+      return;
+    }
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      setActive(false);
+      return;
+    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setActive(false);
+      return;
+    }
+    setActive(true);
+  }, [pathname]);
 
+  useEffect(() => {
+    if (!active) return;
     const cursor = cursorRef.current;
     if (!cursor) return;
 
@@ -81,7 +98,8 @@ export default function CustomCursor() {
           el.removeEventListener("mouseleave", handleMouseLeave);
         });
     };
-  }, [pathname]);
+  }, [active]);
 
+  if (!active) return null;
   return <div ref={cursorRef} className="custom-cursor" />;
 }
