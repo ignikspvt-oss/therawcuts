@@ -195,9 +195,11 @@ router.post("/verify", paymentLimiter, validate(verifySchema), async (req, res) 
       );
     }
 
-    sendBookingConfirmation({ booking, transaction }).catch((err) => {
+    try {
+      await sendBookingConfirmation({ booking, transaction });
+    } catch (err) {
       console.error("Failed to send confirmation email:", err.message);
-    });
+    }
 
     res.json({ success: true, booking, transaction });
   } catch (error) {
