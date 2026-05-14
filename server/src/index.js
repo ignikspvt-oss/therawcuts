@@ -71,6 +71,17 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
+// Ensure DB is connected before handling any /api request (serverless-safe)
+app.use("/api", async (req, res, next) => {
+  if (req.method === "OPTIONS") return next();
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(503).json({ error: "Database unavailable", detail: err.message });
+  }
+});
+
 // Global rate limiter — 100 req per 15min per IP
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -171,9 +182,6 @@ app.use((err, _req, res, _next) => {
   console.error("Unhandled error:", err.message);
   res.status(500).json({ error: "Internal server error" });
 });
-
-// Connect to DB (mongoose caches the connection across serverless invocations)
-connectDB();
 
 // For local development, start the HTTP server
 if (!isProd) {
