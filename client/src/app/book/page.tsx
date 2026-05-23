@@ -366,7 +366,7 @@ function BookingFormContent() {
               onBlur={(e) => (e.currentTarget.style.borderColor = errors.fullName ? "var(--crimson)" : "rgba(96,0,0,0.15)")}
             />
             {errors.fullName && (
-              <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.fullName}</p>
+              <p className="mt-1.5 text-base font-medium flex items-center gap-1.5" style={{ color: "var(--crimson)" }}><span aria-hidden="true">⚠️</span> {errors.fullName}</p>
             )}
           </div>
 
@@ -391,7 +391,7 @@ function BookingFormContent() {
                 onBlur={(e) => (e.currentTarget.style.borderColor = errors.email ? "var(--crimson)" : "rgba(96,0,0,0.15)")}
               />
               {errors.email && (
-                <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.email}</p>
+                <p className="mt-1.5 text-base font-medium flex items-center gap-1.5" style={{ color: "var(--crimson)" }}><span aria-hidden="true">⚠️</span> {errors.email}</p>
               )}
             </div>
             <div>
@@ -413,7 +413,7 @@ function BookingFormContent() {
                 onBlur={(e) => (e.currentTarget.style.borderColor = errors.phone ? "var(--crimson)" : "rgba(96,0,0,0.15)")}
               />
               {errors.phone && (
-                <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.phone}</p>
+                <p className="mt-1.5 text-base font-medium flex items-center gap-1.5" style={{ color: "var(--crimson)" }}><span aria-hidden="true">⚠️</span> {errors.phone}</p>
               )}
             </div>
           </div>
@@ -438,7 +438,7 @@ function BookingFormContent() {
               onBlur={(e) => (e.currentTarget.style.borderColor = errors.eventDetails ? "var(--crimson)" : "rgba(96,0,0,0.15)")}
             />
             {errors.eventDetails && (
-              <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.eventDetails}</p>
+              <p className="mt-1.5 text-base font-medium flex items-center gap-1.5" style={{ color: "var(--crimson)" }}><span aria-hidden="true">⚠️</span> {errors.eventDetails}</p>
             )}
           </div>
 
@@ -489,7 +489,7 @@ function BookingFormContent() {
               ))}
             </select>
             {errors.collection && (
-              <p className="mt-1 text-sm" style={{ color: "var(--crimson)" }}>{errors.collection}</p>
+              <p className="mt-1.5 text-base font-medium flex items-center gap-1.5" style={{ color: "var(--crimson)" }}><span aria-hidden="true">⚠️</span> {errors.collection}</p>
             )}
           </div>
 
