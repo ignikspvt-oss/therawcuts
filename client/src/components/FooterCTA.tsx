@@ -135,7 +135,7 @@ export default function FooterCTA() {
         </p>
 
         <Link
-          href="/book"
+          href="/#collections"
           ref={btnRef}
           className="inline-block mt-10 px-12 py-5 rounded-full text-lg font-semibold transition-all duration-200 hover:scale-[1.04] opacity-0"
           style={{ backgroundColor: "var(--foreground)", color: "#fff" }}
