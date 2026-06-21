@@ -156,6 +156,30 @@ export default function Navbar() {
                 {country === "india" ? "🇮🇳 India" : "🇨🇦 Canada"}
               </button>
             )}
+
+            {/* Join — outlined secondary CTA → /careers */}
+            <Link
+              href="/careers"
+              className="section-label px-5 py-2.5 rounded-full transition-all duration-200"
+              style={
+                scrolled
+                  ? { border: "1px solid var(--crimson)", color: "var(--crimson)", backgroundColor: "transparent" }
+                  : { border: "1px solid rgba(255,255,255,0.4)", color: "#fff", backgroundColor: "transparent" }
+              }
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.backgroundColor = scrolled ? "var(--crimson)" : "rgba(255,255,255,0.15)";
+                el.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.backgroundColor = "transparent";
+                el.style.color = scrolled ? "var(--crimson)" : "#fff";
+              }}
+            >
+              Join
+            </Link>
+
             <Link
               href="/book"
               className="section-label px-5 py-2.5 rounded-full transition-all duration-200"
@@ -218,6 +242,16 @@ export default function Navbar() {
             {link.label}
           </a>
         ))}
+
+        {/* Careers — route link */}
+        <Link
+          href="/careers"
+          onClick={() => setMobileOpen(false)}
+          className="headline text-white hover:opacity-70 transition-opacity"
+          style={{ fontSize: "clamp(2rem,8vw,3rem)", transitionDelay: mobileOpen ? `${navLinks.length * 0.04}s` : "0s" }}
+        >
+          Careers
+        </Link>
 
         {/* Instagram in mobile menu */}
         <a

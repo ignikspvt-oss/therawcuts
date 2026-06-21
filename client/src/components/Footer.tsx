@@ -88,6 +88,17 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link
+                    href="/careers"
+                    style={linkStyle}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#fff")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)")}
+                    className="transition-colors duration-200"
+                  >
+                    Careers
+                  </Link>
+                </li>
+                <li>
                   <a
                     href="#reviews"
                     style={linkStyle}
