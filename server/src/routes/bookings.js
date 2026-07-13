@@ -23,7 +23,7 @@ const bookingSchema = {
   selectedCollection: {
     required: true,
     type: "string",
-    enum: ["social-cuts", "signature-cuts"],
+    enum: ["social-cuts", "signature-cuts", "kalyanam-cuts"],
   },
   quantity: { type: "number", min: 1 },
   country: { type: "string", enum: ["india", "canada"] },
@@ -35,6 +35,10 @@ router.post("/", bookingCreateLimiter, validate(bookingSchema), async (req, res)
     const { fullName, email, phone, eventDetails, referenceUrl, selectedCollection, quantity, couponCode, country } = req.body;
 
     const resolvedCountry = country || "india";
+    if (selectedCollection === "kalyanam-cuts" && resolvedCountry === "canada") {
+      return res.status(400).json({ error: "Kalyanam Cuts is only available for India bookings" });
+    }
+
     const booking = await Booking.create({
       fullName: fullName.trim(),
       email: email.trim().toLowerCase(),

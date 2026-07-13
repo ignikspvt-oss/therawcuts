@@ -217,6 +217,24 @@ const jsonLd = {
         },
       ],
     },
+    {
+      "@type": "Product",
+      "@id": `${SITE_URL}/#kalyanam-cuts`,
+      name: "Kalyanam Cuts",
+      description:
+        "Full wedding coverage — Engagement, Haldi, Sangeet, Cocktail, and Baraat. 25-30 reels plus a dedicated wedding Instagram page.",
+      brand: { "@id": `${SITE_URL}/#organization` },
+      offers: [
+        {
+          "@type": "Offer",
+          priceCurrency: "INR",
+          price: "99999",
+          availability: "https://schema.org/InStock",
+          url: `${SITE_URL}/book?collection=kalyanam-cuts`,
+          areaServed: "IN",
+        },
+      ],
+    },
   ],
 };
 

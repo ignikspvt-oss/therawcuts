@@ -25,7 +25,7 @@ const createCouponSchema = {
 
 const validateCouponSchema = {
   code: { required: true, type: "string" },
-  collection: { required: true, type: "string", enum: ["social-cuts", "signature-cuts"] },
+  collection: { required: true, type: "string", enum: ["social-cuts", "signature-cuts", "kalyanam-cuts"] },
   quantity: { type: "number", min: 1 },
   country: { type: "string", enum: ["india", "canada"] },
 };
@@ -34,6 +34,7 @@ const UNIT_PRICES = {
   india: {
     "social-cuts": 2999,
     "signature-cuts": 4999,
+    "kalyanam-cuts": 99999,
   },
   canada: {
     "social-cuts": 79.99,
@@ -137,6 +138,9 @@ router.post("/validate", couponValidateLimiter, validate(validateCouponSchema), 
 
     const countryPrices = UNIT_PRICES[userCountry] || UNIT_PRICES.india;
     const unitPrice = countryPrices[collection];
+    if (!unitPrice) {
+      return res.status(400).json({ error: "Invalid collection for this region" });
+    }
     const qty = quantity && quantity >= 1 ? Math.floor(quantity) : 1;
     const originalPrice = unitPrice * qty;
 

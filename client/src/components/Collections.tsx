@@ -34,6 +34,20 @@ export default function Collections() {
       slug: "signature-cuts",
       featured: true,
     },
+    ...(prices["kalyanam-cuts"] !== undefined
+      ? [
+          {
+            name: "Kalyanam Cuts",
+            tag: "Full Wedding Coverage",
+            tagline: "The real story starts much earlier.",
+            description: "Most wedding films remember the ceremony. Kalyanam Cuts cover your entire wedding timeline — Engagement, Haldi, Sangeet, Cocktail, and Baraat — delivered as 25–30 reels with a dedicated wedding Instagram page.",
+            bestFor: "Weddings, engagements, multi-day celebrations",
+            deliverable: "25–30 reels + dedicated wedding Instagram page",
+            pricing: `${formatPrice(prices["kalyanam-cuts"])} package`,
+            slug: "kalyanam-cuts",
+          },
+        ]
+      : []),
   ];
 
   useEffect(() => {
@@ -121,11 +135,21 @@ export default function Collections() {
               <p className="text-xs" style={{ color: "rgba(8,8,8,0.5)" }}>Shot on Professional Camera</p>
             </div>
           </div>
+          {prices["kalyanam-cuts"] !== undefined && (
+            <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
+              style={{ background: "rgba(96,0,0,0.05)", border: "1px solid rgba(96,0,0,0.10)" }}>
+              <span className="text-xl">💍</span>
+              <div>
+                <p className="text-sm font-semibold" style={{ color: "var(--crimson)" }}>Kalyanam Cuts</p>
+                <p className="text-xs" style={{ color: "rgba(8,8,8,0.5)" }}>Full Wedding Coverage</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Cards — simple responsive grid, no horizontal scroll */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className={`max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 ${collections.length >= 3 ? "lg:grid-cols-3" : ""} gap-6`}>
         {collections.map((col, i) => (
           <div
             key={i}

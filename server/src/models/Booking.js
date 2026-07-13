@@ -37,7 +37,7 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: [true, "Collection is required"],
       enum: {
-        values: ["social-cuts", "signature-cuts"],
+        values: ["social-cuts", "signature-cuts", "kalyanam-cuts"],
         message: "Invalid collection: {VALUE}",
       },
     },

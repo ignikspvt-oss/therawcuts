@@ -5,6 +5,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const COLLECTION_NAMES = {
   "social-cuts": "Social Cuts",
   "signature-cuts": "Signature Cuts",
+  "kalyanam-cuts": "Kalyanam Cuts",
+};
+
+const QUANTITY_UNIT_LABELS = {
+  "social-cuts": "Cuts",
+  "signature-cuts": "Reels",
+  "kalyanam-cuts": "Package",
 };
 
 const sendBookingConfirmation = async ({ booking, transaction }) => {
@@ -65,7 +72,7 @@ const sendBookingConfirmation = async ({ booking, transaction }) => {
                         <td style="padding:8px 0;color:#111;font-size:14px;font-weight:600;text-align:right;">${collectionName}</td>
                       </tr>
                       <tr>
-                        <td style="padding:8px 0;color:#666;font-size:13px;">${booking.selectedCollection === "social-cuts" ? "Cuts" : "Reels"}</td>
+                        <td style="padding:8px 0;color:#666;font-size:13px;">${QUANTITY_UNIT_LABELS[booking.selectedCollection] || "Reels"}</td>
                         <td style="padding:8px 0;color:#111;font-size:14px;text-align:right;">${booking.quantity || 1}</td>
                       </tr>
                       <tr>

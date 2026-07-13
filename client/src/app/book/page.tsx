@@ -39,7 +39,7 @@ interface RazorpayResponse {
   razorpay_signature: string;
 }
 
-const COLLECTION_META: Record<string, { name: string; minQty: number; qtyLabel: string; qtyNote: string }> = {
+const COLLECTION_META: Record<string, { name: string; minQty: number; qtyLabel: string; qtyNote: string; flatPackage?: boolean }> = {
   "social-cuts": {
     name: "Social Cuts",
     minQty: 1,
@@ -51,6 +51,13 @@ const COLLECTION_META: Record<string, { name: string; minQty: number; qtyLabel: 
     minQty: 2,
     qtyLabel: "Number of Reels",
     qtyNote: "Minimum 2 reels required",
+  },
+  "kalyanam-cuts": {
+    name: "Kalyanam Cuts",
+    minQty: 1,
+    qtyLabel: "Package",
+    qtyNote: "Full wedding coverage — 25–30 reels + dedicated wedding Instagram page",
+    flatPackage: true,
   },
 };
 
@@ -286,12 +293,19 @@ function BookingFormContent() {
     }
   };
 
-  // Build collection options with correct prices
-  const collectionOptions = Object.entries(COLLECTION_META).map(([slug, m]) => {
-    const p = (PRICING[country ?? "india"] as unknown as Record<string, number>)[slug];
-    const unit = slug === "social-cuts" ? "cut" : "reel";
-    return { slug, label: `${m.name} — ${formatPrice(p)} per ${unit}` };
-  });
+  // Build collection options with correct prices — only for collections priced in this region
+  const collectionOptions = Object.entries(COLLECTION_META)
+    .map(([slug, m]) => {
+      const p = (PRICING[country ?? "india"] as unknown as Record<string, number>)[slug];
+      return { slug, meta: m, price: p };
+    })
+    .filter((opt) => opt.price !== undefined)
+    .map(({ slug, meta, price }) => {
+      const label = meta.flatPackage
+        ? `${meta.name} — ${formatPrice(price)} package`
+        : `${meta.name} — ${formatPrice(price)} per ${slug === "social-cuts" ? "cut" : "reel"}`;
+      return { slug, label };
+    });
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--surface-warm)" }}>
@@ -326,7 +340,9 @@ function BookingFormContent() {
               <span className="text-white font-semibold">{currentMeta.name}</span>
               {" — "}
               <span className="text-white/90">
-                {formatPrice(currentPrice)} per {form.collection === "social-cuts" ? "cut" : "reel"}
+                {currentMeta.flatPackage
+                  ? `${formatPrice(currentPrice)} package`
+                  : `${formatPrice(currentPrice)} per ${form.collection === "social-cuts" ? "cut" : "reel"}`}
               </span>
             </p>
           ) : (
@@ -493,58 +509,64 @@ function BookingFormContent() {
             )}
           </div>
 
-          {/* Quantity stepper */}
+          {/* Quantity stepper — or flat package price when the collection isn't billed per unit */}
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: "#600000" }}>
-              {currentMeta.qtyLabel}
+              {currentMeta.flatPackage ? "Package Price" : currentMeta.qtyLabel}
             </label>
             <p className="text-xs mb-3" style={{ color: "rgba(96,0,0,0.55)" }}>
               {currentMeta.qtyNote}
             </p>
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                onClick={() => handleQuantityChange(-1)}
-                disabled={!hasCollection || quantity <= currentMeta.minQty}
-                className="w-11 h-11 rounded-lg flex items-center justify-center transition-all font-bold touch-manipulation"
-                style={{
-                  border: "1.5px solid var(--crimson)",
-                  color: "var(--crimson)",
-                  background: "#fff",
-                  opacity: !hasCollection || quantity <= currentMeta.minQty ? 0.35 : 1,
-                  cursor: !hasCollection || quantity <= currentMeta.minQty ? "not-allowed" : "pointer",
-                }}
-              >
-                <HiMinus className="w-4 h-4" />
-              </button>
-
-              <span className="text-2xl font-bold w-10 text-center" style={{ color: "#600000" }}>
-                {quantity}
+            {currentMeta.flatPackage ? (
+              <span className="text-2xl font-bold" style={{ color: "var(--crimson)" }}>
+                {formatPrice(currentPrice)}
               </span>
+            ) : (
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => handleQuantityChange(-1)}
+                  disabled={!hasCollection || quantity <= currentMeta.minQty}
+                  className="w-11 h-11 rounded-lg flex items-center justify-center transition-all font-bold touch-manipulation"
+                  style={{
+                    border: "1.5px solid var(--crimson)",
+                    color: "var(--crimson)",
+                    background: "#fff",
+                    opacity: !hasCollection || quantity <= currentMeta.minQty ? 0.35 : 1,
+                    cursor: !hasCollection || quantity <= currentMeta.minQty ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <HiMinus className="w-4 h-4" />
+                </button>
 
-              <button
-                type="button"
-                onClick={() => handleQuantityChange(1)}
-                disabled={!hasCollection}
-                className="w-11 h-11 rounded-lg flex items-center justify-center transition-all font-bold touch-manipulation"
-                style={{
-                  border: "1.5px solid var(--crimson)",
-                  color: "#fff",
-                  background: "var(--crimson)",
-                  opacity: !hasCollection ? 0.35 : 1,
-                  cursor: !hasCollection ? "not-allowed" : "pointer",
-                }}
-              >
-                <HiPlus className="w-4 h-4" />
-              </button>
-
-              <span className="text-sm" style={{ color: "rgba(96,0,0,0.6)" }}>
-                × {formatPrice(currentPrice)} ={" "}
-                <span className="font-semibold" style={{ color: "var(--crimson)" }}>
-                  {formatPrice(baseTotal)}
+                <span className="text-2xl font-bold w-10 text-center" style={{ color: "#600000" }}>
+                  {quantity}
                 </span>
-              </span>
-            </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleQuantityChange(1)}
+                  disabled={!hasCollection}
+                  className="w-11 h-11 rounded-lg flex items-center justify-center transition-all font-bold touch-manipulation"
+                  style={{
+                    border: "1.5px solid var(--crimson)",
+                    color: "#fff",
+                    background: "var(--crimson)",
+                    opacity: !hasCollection ? 0.35 : 1,
+                    cursor: !hasCollection ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <HiPlus className="w-4 h-4" />
+                </button>
+
+                <span className="text-sm" style={{ color: "rgba(96,0,0,0.6)" }}>
+                  × {formatPrice(currentPrice)} ={" "}
+                  <span className="font-semibold" style={{ color: "var(--crimson)" }}>
+                    {formatPrice(baseTotal)}
+                  </span>
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Coupon */}
