@@ -52,8 +52,8 @@ const COLLECTION_META: Record<string, { name: string; minQty: number; qtyLabel: 
     qtyLabel: "Number of Reels",
     qtyNote: "Minimum 2 reels required",
   },
-  "kalyanam-cuts": {
-    name: "Kalyanam Cuts",
+  "kalyanam": {
+    name: "Kalyanam",
     minQty: 1,
     qtyLabel: "Package",
     qtyNote: "Full wedding coverage — 25–30 reels + dedicated wedding Instagram page",
@@ -568,6 +568,21 @@ function BookingFormContent() {
               </div>
             )}
           </div>
+
+          {/* Kalyanam launch offer */}
+          {form.collection === "kalyanam" && !couponApplied && (
+            <div
+              className="rounded-xl p-4 flex items-start gap-3"
+              style={{ background: "rgba(96,0,0,0.05)", border: "1px solid rgba(96,0,0,0.15)" }}
+            >
+              <span className="text-lg leading-none">🎉</span>
+              <p className="text-sm" style={{ color: "rgba(96,0,0,0.75)" }}>
+                Use code <strong style={{ color: "var(--crimson)" }}>KALYANAM</strong> for 25% off —
+                brings your package to <strong style={{ color: "var(--crimson)" }}>₹74,999</strong>.
+                Apply it below.
+              </p>
+            </div>
+          )}
 
           {/* Coupon */}
           <div>

@@ -5,13 +5,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const COLLECTION_NAMES = {
   "social-cuts": "Social Cuts",
   "signature-cuts": "Signature Cuts",
-  "kalyanam-cuts": "Kalyanam Cuts",
+  "kalyanam": "Kalyanam",
 };
 
 const QUANTITY_UNIT_LABELS = {
   "social-cuts": "Cuts",
   "signature-cuts": "Reels",
-  "kalyanam-cuts": "Package",
+  "kalyanam": "Package",
 };
 
 const sendBookingConfirmation = async ({ booking, transaction }) => {

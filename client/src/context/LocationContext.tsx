@@ -7,7 +7,7 @@ export type Country = "india" | "canada";
 export interface PricingConfig {
   "social-cuts": number;
   "signature-cuts": number;
-  "kalyanam-cuts"?: number;
+  "kalyanam"?: number;
 }
 
 interface CurrencyConfig {
@@ -30,7 +30,7 @@ export const PRICING: Record<Country, PricingConfig> = {
   india: {
     "social-cuts": 2999,
     "signature-cuts": 4999,
-    "kalyanam-cuts": 99999,
+    "kalyanam": 99999,
   },
   canada: {
     "social-cuts": 79.99,

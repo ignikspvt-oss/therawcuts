@@ -34,17 +34,17 @@ export default function Collections() {
       slug: "signature-cuts",
       featured: true,
     },
-    ...(prices["kalyanam-cuts"] !== undefined
+    ...(prices["kalyanam"] !== undefined
       ? [
           {
-            name: "Kalyanam Cuts",
+            name: "Kalyanam",
             tag: "Full Wedding Coverage",
             tagline: "The real story starts much earlier.",
-            description: "Most wedding films remember the ceremony. Kalyanam Cuts cover your entire wedding timeline — Engagement, Haldi, Sangeet, Cocktail, and Baraat — delivered as 25–30 reels with a dedicated wedding Instagram page.",
+            description: "Most wedding films remember the ceremony. Kalyanam covers your entire wedding timeline — Engagement, Haldi, Sangeet, Cocktail, and Baraat — delivered as 25–30 reels with a dedicated wedding Instagram page.",
             bestFor: "Weddings, engagements, multi-day celebrations",
             deliverable: "25–30 reels + dedicated wedding Instagram page",
-            pricing: `${formatPrice(prices["kalyanam-cuts"])} package`,
-            slug: "kalyanam-cuts",
+            pricing: `${formatPrice(prices["kalyanam"])} package`,
+            slug: "kalyanam",
           },
         ]
       : []),
@@ -135,12 +135,12 @@ export default function Collections() {
               <p className="text-xs" style={{ color: "rgba(8,8,8,0.5)" }}>Shot on Professional Camera</p>
             </div>
           </div>
-          {prices["kalyanam-cuts"] !== undefined && (
+          {prices["kalyanam"] !== undefined && (
             <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
               style={{ background: "rgba(96,0,0,0.05)", border: "1px solid rgba(96,0,0,0.10)" }}>
               <span className="text-xl">💍</span>
               <div>
-                <p className="text-sm font-semibold" style={{ color: "var(--crimson)" }}>Kalyanam Cuts</p>
+                <p className="text-sm font-semibold" style={{ color: "var(--crimson)" }}>Kalyanam</p>
                 <p className="text-xs" style={{ color: "rgba(8,8,8,0.5)" }}>Full Wedding Coverage</p>
               </div>
             </div>

@@ -4,14 +4,14 @@ import Script from "next/script";
 export const metadata: Metadata = {
   title: "Book Your Reel Shoot",
   description:
-    "Book your business reel shoot with The Raw Cuts. Choose Social Cuts (₹2,999 / CA$79.99), Signature Cuts (₹4,999 / CA$149.99), or Kalyanam Cuts (₹99,999, full wedding coverage). Delivered in 24 hours.",
+    "Book your business reel shoot with The Raw Cuts. Choose Social Cuts (₹2,999 / CA$79.99), Signature Cuts (₹4,999 / CA$149.99), or Kalyanam (₹99,999, full wedding coverage). Delivered in 24 hours.",
   alternates: {
     canonical: "/book",
   },
   openGraph: {
     title: "Book Your Reel Shoot | The Raw Cuts",
     description:
-      "Book your business reel shoot — Social Cuts, Signature Cuts, or Kalyanam Cuts. Delivered in 24 hours.",
+      "Book your business reel shoot — Social Cuts, Signature Cuts, or Kalyanam. Delivered in 24 hours.",
     url: "/book",
     type: "website",
   },
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Book Your Reel Shoot | The Raw Cuts",
     description:
-      "Book your business reel shoot — Social Cuts, Signature Cuts, or Kalyanam Cuts. Delivered in 24 hours.",
+      "Book your business reel shoot — Social Cuts, Signature Cuts, or Kalyanam. Delivered in 24 hours.",
   },
 };
 

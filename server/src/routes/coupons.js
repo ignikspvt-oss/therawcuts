@@ -25,7 +25,7 @@ const createCouponSchema = {
 
 const validateCouponSchema = {
   code: { required: true, type: "string" },
-  collection: { required: true, type: "string", enum: ["social-cuts", "signature-cuts", "kalyanam-cuts"] },
+  collection: { required: true, type: "string", enum: ["social-cuts", "signature-cuts", "kalyanam"] },
   quantity: { type: "number", min: 1 },
   country: { type: "string", enum: ["india", "canada"] },
 };
@@ -34,7 +34,7 @@ const UNIT_PRICES = {
   india: {
     "social-cuts": 2999,
     "signature-cuts": 4999,
-    "kalyanam-cuts": 99999,
+    "kalyanam": 99999,
   },
   canada: {
     "social-cuts": 79.99,

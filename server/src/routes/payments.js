@@ -27,7 +27,7 @@ const UNIT_PRICES = {
   india: {
     "social-cuts": 2999,
     "signature-cuts": 4999,
-    "kalyanam-cuts": 99999,
+    "kalyanam": 99999,
   },
   canada: {
     "social-cuts": 79.99,

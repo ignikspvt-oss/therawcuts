@@ -219,8 +219,8 @@ const jsonLd = {
     },
     {
       "@type": "Product",
-      "@id": `${SITE_URL}/#kalyanam-cuts`,
-      name: "Kalyanam Cuts",
+      "@id": `${SITE_URL}/#kalyanam`,
+      name: "Kalyanam",
       description:
         "Full wedding coverage — Engagement, Haldi, Sangeet, Cocktail, and Baraat. 25-30 reels plus a dedicated wedding Instagram page.",
       brand: { "@id": `${SITE_URL}/#organization` },
@@ -230,7 +230,7 @@ const jsonLd = {
           priceCurrency: "INR",
           price: "99999",
           availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/book?collection=kalyanam-cuts`,
+          url: `${SITE_URL}/book?collection=kalyanam`,
           areaServed: "IN",
         },
       ],
